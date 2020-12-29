@@ -8,7 +8,7 @@ Currently done:
 Working on:
 - Understanding and implementing convolutional and pooling layers, writing notes
 - Conv net architectures:
-  - alexnet (done)
+  - alexnet (done) https://github.com/AditMeh/deep-learning/blob/main/AlexNet.ipynb
   - resnet
   - FCNN
   - Fast R-CNN
