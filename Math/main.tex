@@ -1,0 +1,119 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{Probability and Statistics notes}
+\author{Aditya Mehrotra}
+\date{April 2021}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Probability}
+
+\subsection{Basic mathematical definitions}
+
+\textbf{Compliment:} Given a set of of elements $A$ where $A \subseteq S$ for some set of elements $S$, we define the compliment of $A$ in $S$ as the set of elements of $S$ that are not in $A$. Mathematically, this is expressed as $A^c$ or $S - A$.
+
+\vspace{2 mm}
+
+\noindent
+\textbf{Difference:} The difference between sets $A$ and $B$ is all elements that are in $A$ but not in $B$. Mathematically, this is expressed as $A - B$
+
+\vspace{2 mm}
+
+\noindent
+\textbf{Disjoint:} $A$ and $B$ are disjoint if they have no common elements. Mathematically, this is when $A \cap B = \emptyset$
+
+\vspace{2 mm}
+
+\noindent
+\textbf{Product of sets:} The cartesian product of two sets $S$ and $T$, denoted by $S \times T$:
+$$S \times T = \{(s, t) \mid s \in S, t \in T\}$$
+
+\vspace{2 mm}
+
+\noindent
+\textbf{Cardinality of a set:} The number of elements in a set $S$, mathematically denoted by $|S|$
+
+\vspace{2 mm}
+
+\noindent
+\textbf{Inclusion exclusion principle:}
+$$|A \cup B| = |A| + |B| - |A \cap B|$$
+
+
+\subsection{Basic probability terminology}
+
+\textbf{Experiment:} A repeatable procedure with well-defined possible outcomes 
+
+\vspace{2 mm}
+
+\noindent
+\textbf{Sample space:} The set of all possible outcomes. This is denoted by $\Omega$ and sometimes by $S$.
+
+\vspace{2 mm}
+
+\noindent
+\textbf{Event:} A subset of the sample space
+
+\vspace{2 mm}
+
+\noindent
+\textbf{Probability function:} A function assigning a probability for each outcome. More specifically, for a discrete sample space $S$, a probability function $P$ assigns each outcome $\omega \in S$ a number $P(\omega)$. This number is called the probability of $\omega$.
+
+\vspace{1 mm}
+
+\noindent
+P must satisfy two rules:
+\begin{enumerate}
+    \item[] Rule 1: $0 \leq P(\omega) \leq 1$ (probabilities are between 0 and 1)
+    \item[] Rule 2: Given $S = \{\omega_1, \omega_2, \omega_3, ..., \omega_n\}$, $\displaystyle\sum_{j = 1}^{n} P(\omega_j) = 1$. 
+    \\
+    (The sum of probabilities of all possible outcomes add to 1)
+\end{enumerate}
+
+\noindent
+Additionally, the probability of an event $E \subseteq S$ is the sum of the probabilities of all outcomes in $E$. More specifically,
+\[P(E) = \sum_{\omega \in E} P(\omega)\]
+
+\vspace{2 mm}
+
+\noindent
+\textbf{Discrete sample space:} A listable sample space, can be finite or infinite.
+
+\subsection{Basic probability rules}
+For some events $A$, $L$ and $R$ contained in a sample space $\Omega$:
+
+\noindent
+\begin{enumerate}
+    \item[] $P(A^c) = 1 - P(A)$
+    \item[] If $L$ and $R$ are disjoint, then $P(L \cup R) = P(L) + P(R)$
+    \item[] If $L$ and $R$ are not disjoint, we have the inclusion-exclusion principle:
+    \[P(L \cup R) = P(L) + P(R) - P(L \cap R)\]
+\end{enumerate}
+
+
+\subsection{Conditional Probability}
+
+\textbf{Conditional probability:} The probability of $A$ given $B$. Mathematically, this is expressed as $P(A|B)$. More rigorously, given events $A$ and $B$, the conditional probability of $A$ given $B$ is,
+
+$$ P(A|B) = \frac{P(A \cap B)}{P(B)} \textit{, provided that } P(B) \neq 0$$
+
+\noindent
+This gives us the multiplication rule,
+$$P(A \cap B) = P(A|B) \cdot P(B)$$
+
+
+\noindent
+\textbf{Law of Total Probability:} Suppose the sample space $\Omega$ is divided into $n$ disjoint events, $B_1, B_2, ..., B_n$. Then for any event $A$:
+$$P(A) = P(A \cap B_1) + P(A \cap B_2) + ... + P(A \cap B_n) $$
+$$P(A) = P(A|B_1)P(B_1) + P(A|B_2)P(B_2) + ... + P(A|B_n)P(B_n) $$
+
+
+\subsection{Independence}
+\end{document}
