@@ -1,19 +1,29 @@
-from utils import generate_random_pairs
-import pickle
-import numpy as np
-import os
+from torchvision.io.image import decode_image
+from torchvision.transforms.transforms import ToTensor
+from dataloader import Ommniglot_Dataset
+from torch.utils.data import DataLoader
+from utils import generate_random_pairs, check_pickle_exists
+from model import SiameseNet
+from train import train
+import torch
+
 DATASET_PATH = "omniglot/python/images_background/"
 
 
 if __name__ == "__main__":
-    if not os.path.exists("pairs.pickle"):
-        ds = generate_random_pairs(DATASET_PATH)
-        np.random.shuffle(ds)
+    ds = check_pickle_exists(DATASET_PATH)
 
-        with open('pairs.pickle', 'wb') as f:
-            pickle.dump(ds, f)
-    
-    with open('pairs.pickle') as f:
-        ds = pickle.load(f)
-    
+    ommniglot_dataset = Ommniglot_Dataset(
+        train_pairs=ds)
 
+    ommniglot_dataloader = DataLoader(
+        ommniglot_dataset, batch_size=32, shuffle=True)
+
+    device = (torch.device('cuda') if torch.cuda.is_available()
+              else torch.device('cpu'))
+              
+    print(f"Training on device {device}.")
+
+    net = SiameseNet().to(device=device)
+
+    train(20, net, ommniglot_dataloader, 0.01, device, 32)

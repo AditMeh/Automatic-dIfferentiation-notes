@@ -1,13 +1,14 @@
 import os
 import pickle
 import numpy as np
+from torch.utils import data
+from torch.utils.data import dataset
 
 DATASET_SIZE = 30000
 
 
 def generate_random_pairs(dataset_path):
     dataset_pairs = []
-
     for alphabet in os.listdir(dataset_path):
 
         cwd_alpha = os.path.join(dataset_path, alphabet)
@@ -21,6 +22,7 @@ def generate_random_pairs(dataset_path):
             sample = random_sampler(True, cwd_alpha)
             dataset_pairs.append(sample)
 
+        np.random.shuffle(dataset_pairs)
     return dataset_pairs
 
 
@@ -41,3 +43,8 @@ def random_sampler(flag_same, wd):
         path_1, path_2 = (os.path.join(char_wd, path) for path in np.random.choice(
             os.listdir(char_wd), size=2, replace=False))
         return (path_1, path_2, int(flag_same))
+
+
+def check_pickle_exists(ds_path):
+    ds = generate_random_pairs(ds_path)
+    return ds
