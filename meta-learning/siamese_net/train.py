@@ -23,4 +23,4 @@ def train(n_epochs, net, train_loader, learning_rate, device, batch_size):
             loss_train += loss.item()
 
         print('Epoch {}, Train Loss {}'.format(
-            {epoch, loss_train/(batch_size * len(train_loader))}))
+            epoch, loss_train/(batch_size * len(train_loader))))
