@@ -26,4 +26,4 @@ if __name__ == "__main__":
 
     net = SiameseNet().to(device=device)
 
-    train(20, net, ommniglot_dataloader, 0.01, device, 32)
+    train(20, net, ommniglot_dataloader, 0.00005, device, 32)

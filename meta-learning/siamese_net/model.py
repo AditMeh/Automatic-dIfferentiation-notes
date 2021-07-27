@@ -29,6 +29,6 @@ class SiameseNet(nn.Module):
 
         out_2 = self.fc1(self.sister_networks(x2).view(-1, 256 * 6 * 6))
 
-        pred = F.sigmoid(self.fc2(torch.abs(out_1 - out_2)))
+        pred = torch.sigmoid(self.fc2(torch.abs(out_1 - out_2)))
 
         return pred
