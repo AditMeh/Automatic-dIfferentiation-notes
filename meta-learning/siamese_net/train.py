@@ -4,9 +4,9 @@ from torch.optim import Adam
 from torch.optim.sgd import SGD
 
 
-def train(n_epochs, net, train_loader, learning_rate, device, batch_size):
+def train(net, train_loader, val_loader, n_epochs, lr, device, batch_size):
     loss_fn = BCELoss(reduction='sum')
-    optimizer = SGD(params=net.parameters(), lr=learning_rate)
+    optimizer = SGD(params=net.parameters(), lr=lr)
 
     for epoch in range(1, n_epochs + 1):
         loss_train = 0.0

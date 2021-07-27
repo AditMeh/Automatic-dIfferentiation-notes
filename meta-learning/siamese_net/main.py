@@ -1,29 +1,34 @@
-from torchvision.io.image import decode_image
-from torchvision.transforms.transforms import ToTensor
 from dataloader import Ommniglot_Dataset
 from torch.utils.data import DataLoader
-from utils import generate_random_pairs, check_pickle_exists
+from utils import generate_random_pairs
 from model import SiameseNet
 from train import train
 import torch
 
-DATASET_PATH = "omniglot/python/images_background/"
+TRAIN_DATASET_PATH = "omniglot/python/images_background/"
+VALIDATION_DATASET_PATH = "omniglot/python/images_evaluation/"
 
 
 if __name__ == "__main__":
-    ds = check_pickle_exists(DATASET_PATH)
+    ds_train = generate_random_pairs(TRAIN_DATASET_PATH, 30000)
+    ds_val = generate_random_pairs(VALIDATION_DATASET_PATH, 10000)
 
-    ommniglot_dataset = Ommniglot_Dataset(
-        train_pairs=ds)
+    train_dataset = Ommniglot_Dataset(pairs=ds_train)
 
-    ommniglot_dataloader = DataLoader(
-        ommniglot_dataset, batch_size=32, shuffle=True)
+    val_dataset = Ommniglot_Dataset(pairs=ds_val)
+
+    train_loader = DataLoader(
+        train_dataset, batch_size=32, shuffle=True)
+
+    val_loader = DataLoader(
+        val_dataset, batch_size=32, shuffle=True)
 
     device = (torch.device('cuda') if torch.cuda.is_available()
               else torch.device('cpu'))
-              
+
     print(f"Training on device {device}.")
 
     net = SiameseNet().to(device=device)
 
-    train(20, net, ommniglot_dataloader, 0.00005, device, 32)
+    train(net, train_loader, val_loader, n_epochs=20,
+          lr=0.00005, device=device, batch_size=32)
