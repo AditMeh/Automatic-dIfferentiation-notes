@@ -17,20 +17,20 @@ class SiameseNet(nn.Module):
     def forward(self, x1, x2):
 
         # image 1
-        out_1 = nn.max_pool2d(nn.ReLU(self.conv1(x1)),
+        out_1 = nn.MaxPool2d(nn.ReLU(self.conv1(x1)),
                               stride=2, kernel_size=2)
-        out_1 = nn.max_pool2d(nn.ReLU(self.conv2(out_1)),
+        out_1 = nn.MaxPool2d(nn.ReLU(self.conv2(out_1)),
                               stride=2, kernel_size=2)
-        out_1 = nn.max_pool2d(nn.ReLU(self.conv3(out_1)),
+        out_1 = nn.MaxPool2d(nn.ReLU(self.conv3(out_1)),
                               stride=2, kernel_size=2)
         out_1 = nn.ReLU(self.conv4(out_1))
 
         # image 2
-        out_2 = nn.max_pool2d(nn.ReLU(self.conv1(x2)),
+        out_2 = nn.MaxPool2d(nn.ReLU(self.conv1(x2)),
                               stride=2, kernel_size=2)
-        out_2 = nn.max_pool2d(nn.ReLU(self.conv2(out_2)),
+        out_2 = nn.MaxPool2d(nn.ReLU(self.conv2(out_2)),
                               stride=2, kernel_size=2)
-        out_2 = nn.max_pool2d(nn.ReLU(self.conv3(out_2)),
+        out_2 = nn.MaxPool2d(nn.ReLU(self.conv3(out_2)),
                               stride=2, kernel_size=2)
         out_2 = nn.ReLU(self.conv4(out_2))
 
