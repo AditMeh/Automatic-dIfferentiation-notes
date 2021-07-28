@@ -11,7 +11,7 @@ def generate_random_pairs(dataset_path, dataset_size):
 
         cwd_alpha = os.path.join(dataset_path, alphabet)
         # Generate 500 pairs of images belonging to the different characters
-        for _ in range(split//2)):
+        for _ in range(split//2):
             sample=random_sampler(False, cwd_alpha)
             dataset_pairs.append(sample)
 
