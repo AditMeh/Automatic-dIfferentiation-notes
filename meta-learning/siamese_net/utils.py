@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def generate_random_pairs(dataset_path, dataset_size):
-    split = calculate_dataset_split(dataset_size)
+def generate_random_pairs(dataset_path, dataset_size, train):
+    split = calculate_dataset_split(dataset_size, train)
 
     dataset_pairs = []
     for alphabet in os.listdir(dataset_path):
