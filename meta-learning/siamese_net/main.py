@@ -13,9 +13,9 @@ if __name__ == "__main__":
     ds_train = generate_random_pairs(TRAIN_DATASET_PATH, 30000, train=True)
     ds_val = generate_random_pairs(VALIDATION_DATASET_PATH, 10000, train=False)
 
-    train_dataset = Ommniglot_Dataset(pairs=ds_train)
+    train_dataset = Ommniglot_Dataset(pairs=ds_train, is_val=False)
 
-    val_dataset = Ommniglot_Dataset(pairs=ds_val)
+    val_dataset = Ommniglot_Dataset(pairs=ds_val, is_val=True)
 
     train_loader = DataLoader(
         train_dataset, batch_size=32, shuffle=True)
@@ -31,4 +31,4 @@ if __name__ == "__main__":
     net = SiameseNet().to(device=device)
 
     train(net, train_loader, val_loader, n_epochs=20,
-          lr=0.00005, device=device, batch_size=32)
+          lr=0.000005, device=device, batch_size=32)

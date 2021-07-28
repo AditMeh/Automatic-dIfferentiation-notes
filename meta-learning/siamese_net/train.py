@@ -1,6 +1,7 @@
 import torch
 from torch.nn import BCELoss
 from torch.optim import Adam
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.optim.sgd import SGD
 from utils import plot_train_graph
 
@@ -10,6 +11,8 @@ def train(net, train_loader, val_loader, n_epochs, lr, device, batch_size):
     optimizer = SGD(params=net.parameters(), lr=lr)
     val_history = []
     train_history = []
+
+    scheduler = ReduceLROnPlateau(optimizer, 'min', patience=5, verbose=True)
 
     for epoch in range(1, n_epochs + 1):
         loss_train = 0.0
@@ -38,10 +41,16 @@ def train(net, train_loader, val_loader, n_epochs, lr, device, batch_size):
         train_loss_epoch = loss_train / (batch_size * len(train_loader))
         val_loss_epoch = loss_val/(batch_size * len(val_loader))
 
+
+
         train_history.append(train_loss_epoch)
         val_history.append(val_loss_epoch)
 
+
         print('Epoch {}, Train Loss {}, Val Loss {}'.format(
             epoch, train_loss_epoch, val_loss_epoch))
+        
+        scheduler.step(val_loss_epoch)
+
 
     plot_train_graph(Val_Loss=val_history, Train_Loss=train_history)
