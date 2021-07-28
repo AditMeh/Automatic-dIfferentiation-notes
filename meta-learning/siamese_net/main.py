@@ -10,7 +10,7 @@ VALIDATION_DATASET_PATH = "omniglot/python/images_evaluation/"
 
 
 if __name__ == "__main__":
-    ds_train = generate_random_pairs(TRAIN_DATASET_PATH, 30000, trian=True)
+    ds_train = generate_random_pairs(TRAIN_DATASET_PATH, 30000, train=True)
     ds_val = generate_random_pairs(VALIDATION_DATASET_PATH, 10000, train=False)
 
     train_dataset = Ommniglot_Dataset(pairs=ds_train)
