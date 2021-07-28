@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def generate_random_pairs(dataset_path, dataset_size):
@@ -46,3 +47,15 @@ def random_sampler(flag_same, wd):
         path_1, path_2=(os.path.join(char_wd, path) for path in np.random.choice(
             os.listdir(char_wd), size=2, replace=False))
         return (path_1, path_2, int(flag_same))
+
+def plot_train_graph(**kwargs):
+    plt.figure(figsize = (10, 5))
+    plt.title("Statistics over epochs")
+    plt.xlabel("Epochs")
+    plt.ylabel("Metrics")
+
+    for stat in kwargs:
+        plt.plot(kwargs[stat], label = stat)
+
+    plt.legend()
+    plt.show()
