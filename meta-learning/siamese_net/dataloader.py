@@ -19,7 +19,7 @@ class Ommniglot_Dataset(Dataset):
 
         label = torch.Tensor([label])
         if self.transform:
-            img_1 = self.transform(img_1)
-            img_2 = self.transform(img_2)
+            img_1 = self.transform(img_1)/255
+            img_2 = self.transform(img_2)/255
 
         return img_1.float(), img_2.float(), label.float()
