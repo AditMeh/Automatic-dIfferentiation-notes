@@ -15,11 +15,11 @@ class Ommniglot_Dataset(Dataset):
     def __getitem__(self, idx):
         path_1, path_2, label = self.pairs[idx]
 
-        img_1, img_2 = read_image(path_1), read_image(path_2)
+        img_1, img_2 = read_image(path_1)/255, read_image(path_2)/255
 
         label = torch.Tensor([label])
         if self.transform:
-            img_1 = self.transform(img_1)/255
-            img_2 = self.transform(img_2)/255
+            img_1 = self.transform(img_1)
+            img_2 = self.transform(img_2)
 
         return img_1.float(), img_2.float(), label.float()
