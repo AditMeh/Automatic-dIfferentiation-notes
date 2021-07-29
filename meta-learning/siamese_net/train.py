@@ -6,7 +6,7 @@ from torch.optim.sgd import SGD
 from utils import plot_train_graph
 
 
-def train(net, train_loader, val_loader, n_epochs, lr, device, batch_size):
+def train(net, train_loader, val_loader, n_epochs, lr, device, batch_size, save_path):
     loss_fn = BCELoss(reduction='sum')
     optimizer = SGD(params=net.parameters(), lr=lr)
     val_history = []
@@ -29,28 +29,30 @@ def train(net, train_loader, val_loader, n_epochs, lr, device, batch_size):
             loss_train += loss.item()
 
         loss_val = 0.0
+        correct, total = 0, 0
         with torch.no_grad():
             for val_x1, val_x2, val_labels, in val_loader:
                 val_x1, val_x2, val_labels = val_x1.to(device=device), val_x2.to(
                     device=device), val_labels.to(device=device)
                 val_outputs = net(val_x1, val_x2)
                 val_loss = loss_fn(val_outputs, val_labels)
- 
-                loss_val += val_loss
+                loss_val += val_loss.item()
+
+                matching = torch.eq(torch.argmax(
+                    val_outputs, dim=1), val_labels)
+                correct += torch.sum(matching, dim=0).item()
+                total += 32
 
         train_loss_epoch = loss_train / (batch_size * len(train_loader))
         val_loss_epoch = loss_val/(batch_size * len(val_loader))
-
-
+        val_accuracy = correct / total
 
         train_history.append(train_loss_epoch)
         val_history.append(val_loss_epoch)
 
+        print('Epoch {}, Train Loss {}, Val Loss {}, Val Accuracy {}'.format(
+            epoch, train_loss_epoch, val_loss_epoch, val_accuracy))
 
-        print('Epoch {}, Train Loss {}, Val Loss {}'.format(
-            epoch, train_loss_epoch, val_loss_epoch))
-        
         scheduler.step(val_loss_epoch)
 
-
-    plot_train_graph(Val_Loss=val_history, Train_Loss=train_history)
+    return val_history, train_history
