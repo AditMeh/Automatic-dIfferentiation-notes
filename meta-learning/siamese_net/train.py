@@ -38,6 +38,8 @@ def train(net, train_loader, val_loader, n_epochs, lr, device, batch_size, save_
                 val_loss = loss_fn(val_outputs, val_labels)
                 loss_val += val_loss.item()
 
+                print(val_outputs)
+                print(val_labels)
                 matching = torch.eq(val_outputs, val_labels)
                 correct += torch.sum(matching, dim=0).item()
                 total += 32
