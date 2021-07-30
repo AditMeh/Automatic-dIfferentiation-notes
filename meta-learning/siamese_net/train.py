@@ -2,13 +2,13 @@ import torch
 from torch.nn import BCELoss
 from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-from torch.optim.sgd import SGD
+from torch.optim import SGD
 from utils import plot_train_graph
 
 
 def train(net, train_loader, val_loader, n_epochs, lr, device, batch_size, save_path):
     loss_fn = BCELoss(reduction='sum')
-    optimizer = SGD(params=net.parameters(), lr=lr)
+    optimizer = Adam(params=net.parameters(), lr=lr)
     val_history = []
     train_history = []
 
