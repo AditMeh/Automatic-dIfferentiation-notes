@@ -35,5 +35,5 @@ if __name__ == "__main__":
 
     net = SiameseNet().to(device=device)
 
-    train(net, train_loader, val_loader, n_epochs=20,
+    train(net, train_loader, val_loader, samples_per_epoch=30000, samples_val=10000, n_epochs=20,
           lr=0.001, device=device, batch_size=32, save_path="blank")

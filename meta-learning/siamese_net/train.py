@@ -4,20 +4,25 @@ from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.optim import SGD
 from utils import plot_train_graph
+from tqdm import tqdm
 
 
-def train(net, train_loader, val_loader, n_epochs, lr, device, batch_size, save_path):
+def train(net, train_loader, val_loader, n_epochs, samples_per_epoch, samples_val, lr, device, batch_size, save_path):
     loss_fn = BCELoss(reduction='sum')
     optimizer = Adam(params=net.parameters(), lr=lr)
     val_history = []
     train_history = []
 
     scheduler = ReduceLROnPlateau(optimizer, 'min', patience=5, verbose=True)
+    train_iterator_max = samples_per_epoch // batch_size
+    val_iterator_max = samples_val // batch_size
 
     for epoch in range(1, n_epochs + 1):
         loss_train = 0.0
 
-        for x1, x2, labels in train_loader:
+        train_samples_counter = 0
+        for x1, x2, labels in tqdm(train_loader, total=train_iterator_max):
+
             x1, x2, labels = x1.to(device=device), x2.to(
                 device=device), labels.to(device=device)
             outputs = net(x1, x2)
@@ -25,13 +30,16 @@ def train(net, train_loader, val_loader, n_epochs, lr, device, batch_size, save_
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-
             loss_train += loss.item()
 
+            train_samples_counter += 1
+            if train_samples_counter == train_iterator_max:
+                break
         loss_val = 0.0
         correct, total = 0, 0
+
         with torch.no_grad():
-            for val_x1, val_x2, val_labels, in val_loader:
+            for val_x1, val_x2, val_labels in tqdm(val_loader, total=val_iterator_max):
                 val_x1, val_x2, val_labels = val_x1.to(device=device), val_x2.to(
                     device=device), val_labels.to(device=device)
                 val_outputs = net(val_x1, val_x2)
@@ -42,8 +50,10 @@ def train(net, train_loader, val_loader, n_epochs, lr, device, batch_size, save_
                 correct += torch.sum(matching, dim=0).item()
                 total += 32
 
-        train_loss_epoch = loss_train / (batch_size * len(train_loader))
-        val_loss_epoch = loss_val/(batch_size * len(val_loader))
+                if total // 32 == val_iterator_max:
+                    break
+        train_loss_epoch = loss_train / (batch_size * train_iterator_max)
+        val_loss_epoch = loss_val/(batch_size * val_iterator_max)
         val_accuracy = correct / total
 
         train_history.append(train_loss_epoch)
