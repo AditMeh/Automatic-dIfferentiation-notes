@@ -21,7 +21,7 @@ def train(net, train_loader, val_loader, n_epochs, samples_per_epoch, samples_va
         loss_train = 0.0
 
         train_samples_counter = 0
-        for x1, x2, labels in tqdm(train_loader, total=train_iterator_max):
+        for x1, x2, labels in tqdm(train_loader, total=train_iterator_max, position=0, leave=True):
 
             x1, x2, labels = x1.to(device=device), x2.to(
                 device=device), labels.to(device=device)
@@ -39,7 +39,7 @@ def train(net, train_loader, val_loader, n_epochs, samples_per_epoch, samples_va
         correct, total = 0, 0
 
         with torch.no_grad():
-            for val_x1, val_x2, val_labels in val_loader:
+            for val_x1, val_x2, val_labels in tqdm(val_loader, total=val_iterator_max, position=0, leave=True):
                 val_x1, val_x2, val_labels = val_x1.to(device=device), val_x2.to(
                     device=device), val_labels.to(device=device)
                 val_outputs = net(val_x1, val_x2)
