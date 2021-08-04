@@ -1,67 +1,71 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.random import sample
+import random
 
 
-def generate_random_pairs(dataset_path, dataset_size, train):
-    split = calculate_dataset_split(dataset_size, train)
+def dataset_to_dicts(dataset_path):
+    structured_dataset = {}  # {alpha: {char: [fp, fp, fp, ..]}...}
+    unstructured_dataset = {}  # {char1: [fp, fp ...]}
 
-    dataset_pairs = []
     for alphabet in os.listdir(dataset_path):
 
         cwd_alpha = os.path.join(dataset_path, alphabet)
-        # Generate 500 pairs of images belonging to the different characters
-        for _ in range(split//2):
-            sample = random_sampler(False, cwd_alpha)
-            dataset_pairs.append(sample)
+        structured_dataset[alphabet] = {}
 
-        # Generate 500 paris of images belonging to same characters
-        for _ in range(split//2):
-            sample = random_sampler(True, cwd_alpha)
-            dataset_pairs.append(sample)
+        for character in os.listdir(cwd_alpha):
 
-        np.random.shuffle(dataset_pairs)
-    return dataset_pairs
+            cwd_character = os.path.join(cwd_alpha, character)
+            structured_dataset[alphabet][character] = []
+            unstructured_dataset[character] = []
 
+            for sample in os.listdir(cwd_character):
 
-def calculate_dataset_split(dataset_size, train):
-    if train:
-        return dataset_size // 30
-    else:
-        return dataset_size // 20
+                cwd_sample = os.path.join(cwd_character, sample)
+                structured_dataset[alphabet][character].append(cwd_sample)
+                unstructured_dataset[character].append(cwd_sample)
+
+    return structured_dataset, unstructured_dataset
 
 
-def random_sampler(flag_same, wd):
-    if flag_same == False:
-        rng = np.random.randint(0, 2)
+def create_task(dataset, n):
+    raise NotImplementedError
 
-        if rng % 2 == 0:
-            # Alphabet same, class different
-            char_1, char_2 = np.random.choice(
-                os.listdir(wd), size=2, replace=False)
 
-            char_1_wd, char_2_wd = os.path.join(
-                wd, char_1), os.path.join(wd, char_2)
+def generate_random_pair(dataset, sample_mode):
+    state = random.randint(0, 1)
 
-            return (os.path.join(char_1_wd, np.random.choice(os.listdir(char_1_wd))), os.path.join(char_2_wd, np.random.choice(os.listdir(char_2_wd))), int(flag_same))
-        elif rng % 2 == 1:
+    if sample_mode == "within alphabet":
 
-            base_wd = os.path.dirname(wd)
-            wd_new = os.path.join(
-                base_wd, np.random.choice(os.listdir(base_wd)))
+        alphabet = random.sample(dataset.keys(), 1)[0]
 
-            char_1_wd, char_2_wd = os.path.join(wd, np.random.choice(os.listdir(
-                wd))), os.path.join(wd_new, np.random.choice(os.listdir(wd_new)))
+        if state == 1:
+            character = random.sample(dataset[alphabet].keys(), 1)[0]
+            x1, x2 = random.sample(dataset[alphabet][character], 2)
 
-            return (os.path.join(char_1_wd, np.random.choice(os.listdir(char_1_wd))), os.path.join(char_2_wd, np.random.choice(os.listdir(char_2_wd))), int(flag_same))
+            return x1, x2, state
 
-    else:
-        char = np.random.choice(os.listdir(wd))
-        char_wd = os.path.join(wd, char)
+        elif state == 0:
+            character1, character2 = random.sample(dataset[alphabet].keys(), 2)
+            x1, x2 = random.sample(dataset[alphabet][character1], 1), random.sample(
+                dataset[alphabet][character2], 1)
 
-        path_1, path_2 = (os.path.join(char_wd, path) for path in np.random.choice(
-            os.listdir(char_wd), size=2, replace=False))
-        return (path_1, path_2, int(flag_same))
+            return x1, x2, state
+
+    elif sample_mode == "uniform":
+        if state == 1:
+            character = random.sample(dataset.keys(), 1)[0]
+            x1, x2 = random.sample(dataset[character], 2)
+
+            return x1, x2, state
+
+        elif state == 0:
+            character1, character2 = random.sample(dataset.keys(), 2)
+            x1, x2 = random.sample(dataset[character1], 1), random.sample(
+                dataset[character2], 1)
+
+            return x1[0], x2[0], state
 
 
 def plot_train_graph(**kwargs):

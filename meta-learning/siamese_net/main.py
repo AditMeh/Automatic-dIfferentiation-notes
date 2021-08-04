@@ -1,6 +1,7 @@
-from dataloader import Ommniglot_Dataset
+from random import sample
+from dataloader import RandomPairSampler
 from torch.utils.data import DataLoader
-from utils import generate_random_pairs
+from utils import dataset_to_dicts
 from model import SiameseNet
 from train import train
 import torch
@@ -10,18 +11,22 @@ VALIDATION_DATASET_PATH = "omniglot/python/images_evaluation/"
 
 
 if __name__ == "__main__":
-    ds_train = generate_random_pairs(TRAIN_DATASET_PATH, 30000, train=True)
-    ds_val = generate_random_pairs(VALIDATION_DATASET_PATH, 10000, train=False)
+    ds_train_structured, ds_train_unstructured = dataset_to_dicts(
+        TRAIN_DATASET_PATH)
+    ds_val_structured, ds_val_unstructured = dataset_to_dicts(
+        VALIDATION_DATASET_PATH)
 
-    train_dataset = Ommniglot_Dataset(pairs=ds_train, is_val=False)
+    train_dataset = RandomPairSampler(
+        dataset=ds_train_unstructured, sample_mode="uniform", is_val=False)
 
-    val_dataset = Ommniglot_Dataset(pairs=ds_val, is_val=True)
+    val_dataset = RandomPairSampler(
+        dataset=ds_val_unstructured, sample_mode="uniform", is_val=True)
 
     train_loader = DataLoader(
-        train_dataset, batch_size=32, shuffle=True)
+        train_dataset, batch_size=32)
 
     val_loader = DataLoader(
-        val_dataset, batch_size=32, shuffle=True)
+        val_dataset, batch_size=32)
 
     device = (torch.device('cuda') if torch.cuda.is_available()
               else torch.device('cpu'))
