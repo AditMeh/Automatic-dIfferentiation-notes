@@ -39,7 +39,7 @@ def train(net, train_loader, val_loader, n_epochs, samples_per_epoch, samples_va
         correct, total = 0, 0
 
         with torch.no_grad():
-            for val_x1, val_x2, val_labels in tqdm(val_loader, total=val_iterator_max):
+            for val_x1, val_x2, val_labels in val_loader:
                 val_x1, val_x2, val_labels = val_x1.to(device=device), val_x2.to(
                     device=device), val_labels.to(device=device)
                 val_outputs = net(val_x1, val_x2)
