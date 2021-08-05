@@ -37,15 +37,15 @@ class Ommniglot_Dataset(Dataset):
 
 
 class RandomPairSampler(IterableDataset):
-    def __init__(self, sample_mode, dataset, is_val):
+    def __init__(self, sample_mode, dataset_dict, is_val):
         self.sample_mode = sample_mode
-        self.dataset = dataset
+        self.dataset_dict = dataset_dict
         self.is_val = is_val
 
     def return_data(self):
         while True:
             x1, x2, label = generate_random_pair(
-                dataset=self.dataset, sample_mode=self.sample_mode)
+                dataset_dict=self.dataset_dict, sample_mode=self.sample_mode)
 
             img_1, img_2 = cv2.imread(x1, 0), cv2.imread(x2, 0)
 

@@ -17,10 +17,10 @@ if __name__ == "__main__":
         VALIDATION_DATASET_PATH)
 
     train_dataset = RandomPairSampler(
-        dataset=ds_train_unstructured, sample_mode="uniform", is_val=False)
+        dataset_dict=ds_train_unstructured, sample_mode="uniform", is_val=False)
 
     val_dataset = RandomPairSampler(
-        dataset=ds_val_unstructured, sample_mode="uniform", is_val=True)
+        dataset_dict=ds_val_unstructured, sample_mode="uniform", is_val=True)
 
     train_loader = DataLoader(
         train_dataset, batch_size=32)
