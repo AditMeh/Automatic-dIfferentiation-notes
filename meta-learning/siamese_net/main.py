@@ -1,5 +1,5 @@
 from random import sample
-from dataloader import RandomPairSampler
+from dataloader import RandomPairSampler, Ommniglot_Dataset
 from torch.utils.data import DataLoader
 from utils import dataset_to_dicts
 from model import SiameseNet
