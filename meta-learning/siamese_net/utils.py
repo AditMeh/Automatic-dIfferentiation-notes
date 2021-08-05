@@ -29,41 +29,47 @@ def dataset_to_dicts(dataset_path):
     return structured_dataset, unstructured_dataset
 
 
+def generate_dataset(dataset_dict, sample_mode, size):
+    ds = [generate_random_pair(dataset_dict, sample_mode=sample_mode)
+          for _ in range(size)]
+    return ds
+
+
 def create_task(dataset, n):
     raise NotImplementedError
 
 
-def generate_random_pair(dataset, sample_mode):
+def generate_random_pair(dataset_dict, sample_mode):
     state = random.randint(0, 1)
 
     if sample_mode == "within alphabet":
 
-        alphabet = random.sample(dataset.keys(), 1)[0]
+        alphabet = random.sample(dataset_dict.keys(), 1)[0]
 
         if state == 1:
-            character = random.sample(dataset[alphabet].keys(), 1)[0]
-            x1, x2 = random.sample(dataset[alphabet][character], 2)
-
+            character = random.sample(dataset_dict[alphabet].keys(), 1)[0]
+            x1, x2 = random.sample(dataset_dict[alphabet][character], 2)
             return x1, x2, state
 
         elif state == 0:
-            character1, character2 = random.sample(dataset[alphabet].keys(), 2)
-            x1, x2 = random.sample(dataset[alphabet][character1], 1), random.sample(
-                dataset[alphabet][character2], 1)
+            character1, character2 = random.sample(
+                dataset_dict[alphabet].keys(), 2)
+            x1, x2 = random.sample(dataset_dict[alphabet][character1], 1)[0], random.sample(
+                dataset_dict[alphabet][character2], 1)[0]
 
             return x1, x2, state
 
     elif sample_mode == "uniform":
         if state == 1:
-            character = random.sample(dataset.keys(), 1)[0]
-            x1, x2 = random.sample(dataset[character], 2)
+            character = random.sample(dataset_dict.keys(), 1)[0]
+            x1, x2 = random.sample(dataset_dict[character], 2)
 
             return x1, x2, state
 
         elif state == 0:
-            character1, character2 = random.sample(dataset.keys(), 2)
-            x1, x2 = random.sample(dataset[character1], 1), random.sample(
-                dataset[character2], 1)
+            character1, character2 = random.sample(dataset_dict.keys(), 2)
+            x1, x2 = random.sample(dataset_dict[character1], 1), random.sample(
+                dataset_dict[character2], 1)
 
             return x1[0], x2[0], state
 
