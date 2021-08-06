@@ -58,18 +58,3 @@ class RandomPairSampler(IterableDataset):
         return self.return_data()
 
 
-if __name__ == "__main__":
-    TRAIN_DATASET_PATH = "omniglot/python/images_background/"
-    ds_train_structured, ds_train_unstructured = dataset_to_dicts(
-        TRAIN_DATASET_PATH)
-
-    loader = Ommniglot_Dataset(
-        30000, ds_train_structured, is_val=None, sample_mode="within alphabet")
-
-    loader = DataLoader(
-        loader, batch_size=32)
-    x1, x2, x3 = next(iter(loader))
-
-    print(x1.shape)
-    print(x2.shape)
-    print(x3.shape)

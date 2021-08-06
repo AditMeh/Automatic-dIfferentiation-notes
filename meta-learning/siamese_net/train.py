@@ -79,7 +79,7 @@ def train_fixed_dataset(net, train_loader, val_loader, n_epochs, lr, device, bat
         loss_train = 0.0
 
         train_samples_counter = 0
-        for x1, x2, labels in tqdm(train_loader):
+        for x1, x2, labels in tqdm(train_loader,  position=0, leave=True):
 
             x1, x2, labels = x1.to(device=device), x2.to(
                 device=device), labels.to(device=device)
@@ -119,3 +119,5 @@ def train_fixed_dataset(net, train_loader, val_loader, n_epochs, lr, device, bat
         scheduler.step(val_loss_epoch)
 
     return val_history, train_history
+
+
