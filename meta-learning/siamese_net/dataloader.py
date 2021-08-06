@@ -1,9 +1,8 @@
 from random import sample
-from typing import Iterable
 import torch
 from torchvision.io import read_image
 from torch.utils.data import IterableDataset, Dataset, DataLoader
-from utils import generate_random_pair, generate_dataset, dataset_to_dicts
+from utils import generate_random_pair, generate_dataset, create_task_files
 import cv2
 
 
@@ -23,7 +22,7 @@ class Ommniglot_Dataset(Dataset):
 
     def __getitem__(self, idx):
         path_1, path_2, label = self.dataset[idx]
-        #print(path_1)
+        # print(path_1)
 
         img_1, img_2 = cv2.imread(path_1, 0), cv2.imread(path_2, 0)
 
@@ -58,3 +57,29 @@ class RandomPairSampler(IterableDataset):
         return self.return_data()
 
 
+class TaskDataset(Dataset):
+    def __init__(self, pairs) -> None:
+        self.pairs = pairs
+        self.transforms = None
+
+    def __getitem__(self, idx):
+        x1, x2, label = self.pairs[idx]
+
+        return self._load_file_as_image(x1), self._load_file_as_image(x2), torch.Tensor([label]).float
+
+    def __len__(self):
+        return len(self.pairs)
+
+    def _load_file_as_image(path):
+        img = cv2.imread(path, 0)
+        img = torch.Tensor(img)
+        return torch.unsqueeze(img.float(), 0)
+
+
+def create_task_dataloader(pairs, N):
+    batch_size = N
+
+    pair_dataset = TaskDataset(pairs)
+    task_loader = DataLoader(pair_dataset, batch_size=batch_size, num_workers=2)
+
+    return task_loader

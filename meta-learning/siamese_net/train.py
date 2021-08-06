@@ -119,5 +119,3 @@ def train_fixed_dataset(net, train_loader, val_loader, n_epochs, lr, device, bat
         scheduler.step(val_loss_epoch)
 
     return val_history, train_history
-
-

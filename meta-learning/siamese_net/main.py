@@ -59,7 +59,6 @@ if __name__ == "__main__":
     val_loader_random = DataLoader(
         val_dataset_random, batch_size=32)
 
-
     x1, x2, label = next(iter(val_loader_random))
 
     print(x1.shape, x1.dtype)

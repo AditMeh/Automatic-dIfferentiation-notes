@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy.random import sample
 import random
+import torch
 
 
 def dataset_to_dicts(dataset_path):
@@ -29,14 +30,50 @@ def dataset_to_dicts(dataset_path):
     return structured_dataset, unstructured_dataset
 
 
+def evaluate_model_on_task(outputs: torch.Tensor):
+    # expects outputs in shape (N, N, 1)
+    N = outputs.size()[0]
+    outputs = torch.squeeze(outputs)
+    outputs = torch.argmax(outputs, dim=1)
+    target = torch.Tensor([i for i in range(N)])
+    return torch.sum(torch.eq(outputs, target)) / (N**2)
+
+
+def create_task_files(dataset_dict, N, sample_mode):
+    # Sample 2 pairs of same-chars N times, each pair from
+    # a random character class without replacement.
+    if sample_mode == "uniform":
+        characters = random.sample(dataset_dict.keys(), N)
+        same_pairs = [tuple(random.sample(dataset_dict[char], 2))
+                      for char in characters]
+
+        return _convert_same_pairs_to_task(same_pairs)
+
+    # Sample 2 pairs of same_chars N times within an alphabet
+
+    elif sample_mode == "within alphabet":
+        random_alphabet = random.sample(dataset_dict.keys(), 1)[0]
+        characters = random.sample(dataset_dict[random_alphabet].keys(), N)
+        same_pairs = [tuple(random.sample(
+            dataset_dict[random_alphabet][char], 2)) for char in characters]
+
+        return _convert_same_pairs_to_task(same_pairs)
+
+
+def _convert_same_pairs_to_task(same_pairs):
+    batches = []
+
+    for i in range(len(same_pairs)):
+        for j in range(len(same_pairs)):
+            batches.append(
+                (same_pairs[i][0], same_pairs[j][1], 1 if i == j else 0))
+    return batches
+
+
 def generate_dataset(dataset_dict, sample_mode, size):
     ds = [generate_random_pair(dataset_dict, sample_mode=sample_mode)
           for _ in range(size)]
     return ds
-
-
-def create_task(dataset, n):
-    raise NotImplementedError
 
 
 def generate_random_pair(dataset_dict, sample_mode):
