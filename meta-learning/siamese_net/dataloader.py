@@ -70,7 +70,7 @@ class TaskDataset(Dataset):
     def __len__(self):
         return len(self.pairs)
 
-    def _load_file_as_image(path):
+    def _load_file_as_image(self, path):
         img = cv2.imread(path, 0)
         img = torch.Tensor(img)
         return torch.unsqueeze(img.float(), 0)
