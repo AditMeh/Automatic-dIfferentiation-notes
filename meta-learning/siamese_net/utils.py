@@ -33,10 +33,9 @@ def dataset_to_dicts(dataset_path):
 def evaluate_model_on_task(outputs: torch.Tensor):
     # expects outputs in shape (N, N, 1)
     N = outputs.size()[0]
-    outputs = torch.squeeze(outputs)
     outputs = torch.argmax(outputs, dim=1)
     target = torch.Tensor([i for i in range(N)])
-    return torch.sum(torch.eq(outputs, target)) / (N**2)
+    return torch.sum(torch.eq(outputs, target)) / (N)
 
 
 def create_task_files(dataset_dict, N, sample_mode):
