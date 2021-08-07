@@ -38,6 +38,7 @@ class RandomPairSampler(IterableDataset):
         self.sample_mode = sample_mode
         self.dataset_dict = dataset_dict
         self.is_val = is_val
+        self.transform = transform
 
     def return_data(self):
         while True:
@@ -61,7 +62,6 @@ class RandomPairSampler(IterableDataset):
 class TaskDataset(Dataset):
     def __init__(self, pairs) -> None:
         self.pairs = pairs
-        self.transforms = None
 
     def __getitem__(self, idx):
         x1, x2, label = self.pairs[idx]
