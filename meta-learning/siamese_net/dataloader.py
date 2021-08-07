@@ -26,11 +26,12 @@ class Ommniglot_Dataset(Dataset):
         img_1, img_2 = _load_file_as_image(path_1), _load_file_as_image(path_2)
 
         label = torch.Tensor([label])
+
         if self.transform:
             img_1 = self.transform(img_1)
             img_2 = self.transform(img_2)
 
-        return torch.unsqueeze(img_1.float(), 0), torch.unsqueeze(img_2.float(), 0), label.float()
+        return img_1, img_2, label
 
 
 class RandomPairSampler(IterableDataset):
@@ -53,7 +54,7 @@ class RandomPairSampler(IterableDataset):
                 img_1 = self.transform(img_1)
                 img_2 = self.transform(img_2)
 
-            yield torch.unsqueeze(img_1.float(), 0), torch.unsqueeze(img_2.float(), 0), label.float()
+            yield img_1, img_2, label
 
     def __iter__(self):
         return self.return_data()
